@@ -106,7 +106,7 @@ int main() {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glm::mat4 projection = glm::perspective(glm::radians(75.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(75.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(projection));
 
@@ -147,7 +147,9 @@ int main() {
         // Skalowanie kostki na większą - teraz o 5 razy
         glScalef(5.0f, 5.0f, 5.0f);
 
+        Map::drawMap();
         Crosshair::drawCrosshair(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
         glPopMatrix();
         glMatrixMode(GL_PROJECTION);
