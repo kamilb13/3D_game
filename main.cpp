@@ -13,8 +13,8 @@
 #include "Cube.h"
 #include "Map.h"
 
-#define SCREEN_WIDTH 2560
-#define SCREEN_HEIGHT 1440
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
 
 // do tego zeby jak patrze do przodu to zebym szedl do przodu a nie na sztywno
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
