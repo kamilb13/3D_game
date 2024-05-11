@@ -1,18 +1,59 @@
 #include "Bullet.h"
 
-void Bullet::drawBullet(const glm::vec3& position) {
-    // Ustaw pozycję pocisku
-    glPushMatrix();
-    glTranslatef(position.x, position.y, position.z);
+void Bullet::shoot(glm::vec3 cameraPosition, glm::vec3 cameraFront)
+{
+	this->isActive = true;
+	this->currentBulletPosition = cameraPosition;
+	this->bulletDirection = cameraFront;
+}
 
-    // Rysuj kwadrat
+void Bullet::drawBullet()
+{
+    glm::vec3 center = currentBulletPosition;
+
+    float halfSize = size / 2.0f;
+
+    //// Front face
     glBegin(GL_QUADS);
-    glVertex3f(-0.2f, -0.2f, 0.0f);
-    glVertex3f(0.2f, -0.2f, 0.0f);
-    glVertex3f(0.2f, 0.2f, 0.0f);
-    glVertex3f(-0.2f, 0.2f, 0.0f);
+    glColor3f(1.0f, 0.0f, 0.0f); // Red
+    glVertex3f(center.x - halfSize, center.y - halfSize, center.z + halfSize);
+    glVertex3f(center.x + halfSize, center.y - halfSize, center.z + halfSize);
+    glVertex3f(center.x + halfSize, center.y + halfSize, center.z + halfSize);
+    glVertex3f(center.x - halfSize, center.y + halfSize, center.z + halfSize);
+    // Back face
+    glColor3f(0.0f, 1.0f, 0.0f); // Green
+    glVertex3f(center.x - halfSize, center.y - halfSize, center.z - halfSize);
+    glVertex3f(center.x - halfSize, center.y + halfSize, center.z - halfSize);
+    glVertex3f(center.x + halfSize, center.y + halfSize, center.z - halfSize);
+    glVertex3f(center.x + halfSize, center.y - halfSize, center.z - halfSize);
+    // Top face
+    glColor3f(0.0f, 0.0f, 1.0f); // Blue
+    glVertex3f(center.x - halfSize, center.y + halfSize, center.z - halfSize);
+    glVertex3f(center.x - halfSize, center.y + halfSize, center.z + halfSize);
+    glVertex3f(center.x + halfSize, center.y + halfSize, center.z + halfSize);
+    glVertex3f(center.x + halfSize, center.y + halfSize, center.z - halfSize);
+    // Bottom face
+    glColor3f(1.0f, 1.0f, 0.0f); // Yellow
+    glVertex3f(center.x - halfSize, center.y - halfSize, center.z - halfSize);
+    glVertex3f(center.x + halfSize, center.y - halfSize, center.z - halfSize);
+    glVertex3f(center.x + halfSize, center.y - halfSize, center.z + halfSize);
+    glVertex3f(center.x - halfSize, center.y - halfSize, center.z + halfSize);
+    //// Right face
+    glColor3f(1.0f, 0.0f, 1.0f); // Magenta
+    glVertex3f(center.x + halfSize, center.y - halfSize, center.z - halfSize);
+    glVertex3f(center.x + halfSize, center.y + halfSize, center.z - halfSize);
+    glVertex3f(center.x + halfSize, center.y + halfSize, center.z + halfSize);
+    glVertex3f(center.x + halfSize, center.y - halfSize, center.z + halfSize);
+    // Left face
+    glColor3f(0.0f, 1.0f, 1.0f); // Cyan
+    glVertex3f(center.x - halfSize, center.y - halfSize, center.z - halfSize);
+    glVertex3f(center.x - halfSize, center.y - halfSize, center.z + halfSize);
+    glVertex3f(center.x - halfSize, center.y + halfSize, center.z + halfSize);
+    glVertex3f(center.x - halfSize, center.y + halfSize, center.z - halfSize);
     glEnd();
+}
 
-    // Przywróć pierwotną macierz modelu-widoku
-    glPopMatrix();
+void Bullet::updateBulletPosition()
+{
+    this->currentBulletPosition += bulletDirection * speed;
 }
