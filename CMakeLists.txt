@@ -57,6 +57,8 @@ add_executable(${PROJECT_NAME}
         EventHandler.h
         Cube.cpp
         Cube.h
+        Map.cpp
+        Map.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw GLEW glm SOIL GL)

@@ -11,6 +11,7 @@
 #include "Bullet.h"
 #include "EventHandler.h"
 #include "Cube.h"
+#include "Map.h"
 
 #define SCREEN_WIDTH 2560
 #define SCREEN_HEIGHT 1440
@@ -112,8 +113,6 @@ int main() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-
-
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -147,8 +146,6 @@ int main() {
 
         // Skalowanie kostki na większą - teraz o 5 razy
         glScalef(5.0f, 5.0f, 5.0f);
-
-        Cube::drawCube();
 
         Crosshair::drawCrosshair(SCREEN_WIDTH, SCREEN_HEIGHT);
 
