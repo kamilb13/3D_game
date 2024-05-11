@@ -13,11 +13,11 @@
 #include "Cube.h"
 #include "Map.h"
 
-#define SCREEN_WIDTH 2560
-#define SCREEN_HEIGHT 1440
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
 
 // do tego zeby jak patrze do przodu to zebym szedl do przodu a nie na sztywno
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraPos = glm::vec3(10.0f, 20.0f, 10.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -39,20 +39,36 @@ float jumpForce = 2.0f;
 
 float gravity = -0.2f; // Stała grawitacji
 float posY = -12.0f; // Początkowa pozycja Y postaci
+int currentBullet = 0;
+
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
         keys[key] = true;
     } else if (action == GLFW_RELEASE) {
         keys[key] = false;
+    } 
+    if (action == GLFW_PRESS && key == GLFW_KEY_R) {
+        currentBullet = 0;
     }
 }
+
+
+Bullet bullet;
+
+Bullet magazine[30];
+
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
         std::cout << "Strzał!" << std::endl;
+        if (currentBullet < 30) {
+            magazine[currentBullet++].shoot(cameraPos, cameraFront);
+        }
+        bullet.shoot(cameraPos, cameraFront);
     }
 }
+
 
 void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
     if (firstMouse) {
@@ -80,6 +96,9 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
     if (rotationX < -89.0f)
         rotationX = -89.0f;
 }
+
+
+
 
 
 int main() {
@@ -113,8 +132,12 @@ int main() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    
+
     Map map;
-    map.generateMapFromFile("../map.txt");
+    map.generateMapFromFile("C:/Users/Komputer/Downloads/3D_game-Pacierz/map.txt");
+
+    
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
@@ -133,6 +156,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
+
+
         // Aktualizacja wektora cameraFront na podstawie rotationX i rotationY
         glm::vec3 front;
         front.x = cos(glm::radians(rotationY)) * cos(glm::radians(rotationX));
@@ -144,15 +169,22 @@ int main() {
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         glMultMatrixf(glm::value_ptr(view));
 
+
+        if (currentBullet <= 30) {
+            for (int i = 0; i < 30; i++) {
+                if (magazine[i].isActive) {
+                    magazine[i].drawBullet();
+                    magazine[i].updateBulletPosition();
+                }
+            }
+        }
+
         // Przesunięcie postaci na nową pozycję
         glTranslatef(0.0f, posY, 0.0f);
 
-        // Skalowanie kostki na większą - teraz o 5 razy
-        glScalef(5.0f, 5.0f, 5.0f);
 
         map.drawMap(2);
         Crosshair::drawCrosshair(SCREEN_WIDTH, SCREEN_HEIGHT);
-
 
         glPopMatrix();
         glMatrixMode(GL_PROJECTION);
@@ -162,7 +194,7 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
+    
     glfwTerminate();
     return 0;
 }
