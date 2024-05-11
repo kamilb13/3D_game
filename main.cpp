@@ -113,6 +113,9 @@ int main() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    Map map;
+    map.generateMapFromFile("../map.txt");
+
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -147,7 +150,7 @@ int main() {
         // Skalowanie kostki na większą - teraz o 5 razy
         glScalef(5.0f, 5.0f, 5.0f);
 
-        Map::drawMap();
+        map.drawMap(2);
         Crosshair::drawCrosshair(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
