@@ -11,7 +11,15 @@
 
 class Bullet {
 public:
-    void drawBullet(const glm::vec3& position);
+    glm::vec3 currentBulletPosition;
+    glm::vec3 bulletDirection;
+    float size = 0.2f;
+    float speed = 3.0f;
+    bool isActive;
+    void shoot(glm::vec3 cameraPosition, glm::vec3 cameraFront);
+    void drawBullet();
+    void updateBulletPosition();
+
 };
 
 
