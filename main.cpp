@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include <cmath>
 
 #include "Crosshair.h"
 #include "Camera.h"
@@ -12,9 +13,12 @@
 #include "EventHandler.h"
 #include "Cube.h"
 #include "Map.h"
+#include "../../Desktop/FPS 3D/FPS 3D/Target.h"
+//#include "Target.h" // NIE DZIALA MI TAK ??? DXDDDDDDDDD ;PP
 
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
+#define M_PI 3.14159265358979323846
 
 // do tego zeby jak patrze do przodu to zebym szedl do przodu a nie na sztywno
 glm::vec3 cameraPos = glm::vec3(10.0f, 20.0f, 10.0f);
@@ -31,6 +35,8 @@ bool keys[1024];
 float cameraSpeed = 30.0f;
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f;
+
+float points = 0;
 
 // Deklaracja prędkości wertykalnej
 float verticalVelocity = 2.0f;
@@ -54,10 +60,27 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 }
 
 
-Bullet bullet;
+
 
 Bullet magazine[30];
 
+Target targetsTab[5];
+glm::vec3 targets[] = {
+    glm::vec3(2.1f, 25, 5),
+    glm::vec3(2.1f, 15, 3),
+    glm::vec3(2.1f, 22, 52),
+    glm::vec3(2.1f, 18, 40),
+    glm::vec3(2.1f, 20, 23),
+};
+
+bool targetHit;
+
+void initTargets() {
+    for (int i = 0; i < 5; i++) {
+        targetsTab[i].targetPosition = targets[i];
+        targetsTab[i].radius = 2.0f;
+    }
+}
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -65,7 +88,9 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         if (currentBullet < 30) {
             magazine[currentBullet++].shoot(cameraPos, cameraFront);
         }
-        bullet.shoot(cameraPos, cameraFront);
+        else {
+            std::cout << "EMPTY MAGAZIEN! Click 'R' to reload!" << std::endl;
+        }
     }
 }
 
@@ -96,8 +121,6 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
     if (rotationX < -89.0f)
         rotationX = -89.0f;
 }
-
-
 
 
 
@@ -137,7 +160,7 @@ int main() {
     Map map;
     map.generateMapFromFile("C:/Users/Komputer/Downloads/3D_game-Pacierz/map.txt");
 
-    
+    initTargets();
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
@@ -156,6 +179,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
 
+        
+
 
 
         // Aktualizacja wektora cameraFront na podstawie rotationX i rotationY
@@ -170,11 +195,20 @@ int main() {
         glMultMatrixf(glm::value_ptr(view));
 
 
+        for (int i = 0; i < 5; i++) {
+            targetsTab[i].drawFilledCircle(90.0f);
+        }
+
+        
         if (currentBullet <= 30) {
             for (int i = 0; i < 30; i++) {
                 if (magazine[i].isActive) {
                     magazine[i].drawBullet();
                     magazine[i].updateBulletPosition();
+                    for (int j = 0; j < 5; j++) {
+                        targetsTab[j].checkCollision(magazine[i].currentBulletPosition, 0.2f, &points);
+                    }
+                 
                 }
             }
         }
