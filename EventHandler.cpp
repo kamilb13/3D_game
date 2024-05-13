@@ -1,6 +1,6 @@
 #include "EventHandler.h"
 
-void EventHandler::keyHandler(GLFWwindow *window, bool keys[1024], float cameraSpeed, glm::vec3 *cameraPos, glm::vec3 cameraFront, glm::vec3 cameraUp, float deltaTime) {
+void EventHandler::keyHandler(GLFWwindow *window, bool keys[1024], float cameraSpeed, glm::vec3 *cameraPos, glm::vec3 cameraFront, glm::vec3 cameraUp, float deltaTime, Map map) {
     float speed;
 
     // SPRINT
@@ -11,19 +11,21 @@ void EventHandler::keyHandler(GLFWwindow *window, bool keys[1024], float cameraS
     }
 
     if (keys[GLFW_KEY_W]) {
-        *cameraPos += speed * deltaTime * cameraFront;
+        glm::vec3 newPos = *cameraPos + speed * deltaTime * cameraFront;
+        *cameraPos = newPos;
     }
     if (keys[GLFW_KEY_S]) {
-        *cameraPos -= speed * deltaTime * cameraFront;
+        glm::vec3 newPos = *cameraPos - speed * deltaTime * cameraFront;
+        *cameraPos = newPos;
     }
     if (keys[GLFW_KEY_A]) {
-        *cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed * deltaTime;
+        glm::vec3 newPos = *cameraPos - glm::normalize(glm::cross(cameraFront, cameraUp)) * speed * deltaTime;
+        *cameraPos = newPos;
     }
     if (keys[GLFW_KEY_D]) {
-        *cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed * deltaTime;
+        glm::vec3 newPos = *cameraPos + glm::normalize(glm::cross(cameraFront, cameraUp)) * speed * deltaTime;
+        *cameraPos = newPos;
     }
-
-
 
     if (keys[GLFW_KEY_ESCAPE]) {
         glfwSetWindowShouldClose(window, true);

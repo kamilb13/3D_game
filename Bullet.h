@@ -11,7 +11,7 @@
 
 class Bullet {
 public:
-    glm::vec3 currentBulletPosition;
+    glm::vec3 currentBulletPosition ;
     glm::vec3 bulletDirection;
     float size = 0.2f;
     float speed = 3.0f;

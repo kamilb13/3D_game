@@ -59,6 +59,10 @@ add_executable(${PROJECT_NAME}
         Cube.h
         Map.cpp
         Map.h
+        Target.h
+        Target.cpp
+        Texture.cpp
+        Texture.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw GLEW glm SOIL GL)

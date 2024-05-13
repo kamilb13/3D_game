@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include <cmath>
 
 #include "Crosshair.h"
 #include "Camera.h"
@@ -12,9 +13,11 @@
 #include "EventHandler.h"
 #include "Cube.h"
 #include "Map.h"
+#include "Target.h"
 
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
+#define M_PI 3.14159265358979323846
 
 // do tego zeby jak patrze do przodu to zebym szedl do przodu a nie na sztywno
 glm::vec3 cameraPos = glm::vec3(10.0f, 20.0f, 10.0f);
@@ -29,16 +32,16 @@ bool firstMouse = true;
 
 bool keys[1024];
 float cameraSpeed = 30.0f;
-float deltaTime = 0.0f; // Time between current frame and last frame
+float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-// Deklaracja prędkości wertykalnej
+float points = 0;
+
 float verticalVelocity = 2.0f;
-// Stała reprezentująca siłę podskoku
 float jumpForce = 2.0f;
 
-float gravity = -0.2f; // Stała grawitacji
-float posY = -12.0f; // Początkowa pozycja Y postaci
+float gravity = -0.2f;
+float posY = 1.0f; // Początkowa pozycja Y postaci
 int currentBullet = 0;
 
 
@@ -47,17 +50,32 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         keys[key] = true;
     } else if (action == GLFW_RELEASE) {
         keys[key] = false;
-    }
+    } 
     if (action == GLFW_PRESS && key == GLFW_KEY_R) {
         currentBullet = 0;
     }
 }
 
 
-Bullet bullet;
-
 Bullet magazine[30];
 
+Target targetsTab[5];
+glm::vec3 targets[] = {
+    glm::vec3(2.1f, 6, 5),
+    glm::vec3(2.1f, 4, 3),
+    glm::vec3(2.1f, 4, 52),
+    glm::vec3(2.1f, 8, 40),
+    glm::vec3(2.1f, 5, 23),
+};
+
+bool targetHit;
+
+void initTargets() {
+    for (int i = 0; i < 5; i++) {
+        targetsTab[i].targetPosition = targets[i];
+        targetsTab[i].radius = 2.0f;
+    }
+}
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -65,7 +83,9 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         if (currentBullet < 30) {
             magazine[currentBullet++].shoot(cameraPos, cameraFront);
         }
-        bullet.shoot(cameraPos, cameraFront);
+        else {
+            std::cout << "EMPTY MAGAZINE! Click 'R' to reload!" << std::endl;
+        }
     }
 }
 
@@ -78,7 +98,7 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
     }
 
     double xoffset = xpos - lastX;
-    double yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    double yoffset = lastY - ypos;
 
     lastX = xpos;
     lastY = ypos;
@@ -90,14 +110,11 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
     rotationY += xoffset;
     rotationX += yoffset;
 
-    // Constrain pitch
     if (rotationX > 89.0f)
         rotationX = 89.0f;
     if (rotationX < -89.0f)
         rotationX = -89.0f;
 }
-
-
 
 
 
@@ -132,30 +149,23 @@ int main() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-
-
     Map map;
     map.generateMapFromFile("../map.txt");
 
-
+    initTargets();
 
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // Kolizja z podstawą sześcianu
-        if (posY < 12.0f) {
-            posY += 0.7f; // Zatrzymaj postać na wysokości podstawy sześcianu
-            //gravity = 0.0f; // Zresetuj grawitację
-        }
+        cameraPos.y = 5.0f;
 
         glfwPollEvents();
-        EventHandler::keyHandler(window, keys, cameraSpeed, &cameraPos, cameraFront, cameraUp, deltaTime);
+        EventHandler::keyHandler(window, keys, cameraSpeed, &cameraPos, cameraFront, cameraUp, deltaTime, map);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
-
 
 
         // Aktualizacja wektora cameraFront na podstawie rotationX i rotationY
@@ -170,11 +180,20 @@ int main() {
         glMultMatrixf(glm::value_ptr(view));
 
 
+        for (int i = 0; i < 5; i++) {
+            targetsTab[i].drawFilledCircle(90.0f);
+        }
+        
         if (currentBullet <= 30) {
             for (int i = 0; i < 30; i++) {
                 if (magazine[i].isActive) {
                     magazine[i].drawBullet();
                     magazine[i].updateBulletPosition();
+                    for (int j = 0; j < 5; j++) {
+                        if (targetsTab[j].checkCollision(magazine[i].currentBulletPosition, 0.2f, &points)) {
+                            magazine[i].isActive = false;
+                        }
+                    }
                 }
             }
         }
@@ -182,8 +201,7 @@ int main() {
         // Przesunięcie postaci na nową pozycję
         glTranslatef(0.0f, posY, 0.0f);
 
-
-        map.drawMap(10);
+        map.drawMap(2)  ;
         Crosshair::drawCrosshair(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         glPopMatrix();
@@ -194,7 +212,7 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
+    
     glfwTerminate();
     return 0;
 }

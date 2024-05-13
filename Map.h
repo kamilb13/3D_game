@@ -10,6 +10,8 @@
 #include <vector>
 #include <fstream>
 
+#include "Texture.h"
+
 class Map {
 public:
     int rows;
@@ -19,7 +21,6 @@ public:
     void drawMap(int scale);
 private:
     static void drawWall(float x1, float y1, float z1, float x2, float y2, float z2);
-    static void drawFloor(float x1, float y1, float z1, float x2, float y2, float z2);
 };
 
 
