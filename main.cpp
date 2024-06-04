@@ -80,7 +80,7 @@ void initTargets() {
 
 void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-        std::cout << "Strzał!" << std::endl;
+        std::cout << "Strzal!" << std::endl;
         if (currentBullet < 30) {
             magazine[currentBullet++].shoot(cameraPos, cameraFront);
         }
@@ -117,10 +117,12 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
         rotationX = -89.0f;
 }
 
+float maxX = 50.0f;
+float maxZ = 50.0f;
 
 
 int main() {
-    GLFWwindow* window = GLEWInitializer::initGLEWandCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Window");
+    GLFWwindow* window = GLEWInitializer::initGLEW(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Window");
     if (!window) {
         std::cerr << "Failed to initialize GLEW and create GLFW window\n";
         return -1;
@@ -173,7 +175,13 @@ int main() {
         // Ustawienie kamery
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         glMultMatrixf(glm::value_ptr(view));
-
+        
+        //###########
+        //isInsideMapBounds(cameraPos, maxX, maxZ);
+        std::cout << "x " << cameraPos.x << std::endl;
+        std::cout << "y " <<  cameraPos.y << std::endl;
+        std::cout << "z " <<  cameraPos.z << std::endl;
+        //###########
 
         for (int i = 0; i < 5; i++) {
             targetsTab[i].drawFilledCircle(90.0f);

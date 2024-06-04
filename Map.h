@@ -19,6 +19,10 @@ public:
     std::vector<std::vector<int>> tab;
     void generateMapFromFile(const std::string &filename);
     void drawMap(int scale);
+    float maxX = 50.0f;
+    float maxZ = 50.0f;
+    float minX = 10.0f;
+    float minZ = 10.0f;
 private:
     static void drawWall(float x1, float y1, float z1, float x2, float y2, float z2);
 };

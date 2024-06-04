@@ -13,6 +13,8 @@
 class EventHandler {
 public:
     static void keyHandler(GLFWwindow *window, bool keys[1024], float cameraSpeed, glm::vec3 *cameraPos, glm::vec3 cameraFront, glm::vec3 cameraUp, float deltaTime, Map map);
+    static bool isInsideMapBounds(const glm::vec3& position, float minX, float maxX, float minZ, float maxZ);
+
 };
 
 
