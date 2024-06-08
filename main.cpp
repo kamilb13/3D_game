@@ -115,12 +115,9 @@ int main() {
         return -1;
     }
 
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);    //vsync
     glfwSetKeyCallback(window, keyCallback);
     glfwSetCursorPosCallback(window, cursorPositionCallback);
     glfwSetMouseButtonCallback(window, mouseButtonCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glEnable(GL_DEPTH_TEST);
 

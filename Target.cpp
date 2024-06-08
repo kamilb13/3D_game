@@ -6,7 +6,7 @@ void Target::drawFilledCircle(float angle)
     glTranslatef(targetPosition.x, targetPosition.y, targetPosition.z);
     glRotatef(angle, 0.0f, 1.0f, 0.0f);
     glBegin(GL_TRIANGLE_FAN);
-    glVertex2f(0.0f, 0.0f); // Środek wypełnionego okręgu
+    glVertex2f(0.0f, 0.0f);
     for (int i = 0; i <= SEGMENTS; i++) {
         float theta = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(SEGMENTS);
         float x = radius * cos(theta);
@@ -19,8 +19,6 @@ void Target::drawFilledCircle(float angle)
 
 bool Target::checkCollision(glm::vec3 bulletPosition, float cubeSize, float* points)
 {
-    // Sprawdzenie kolizji sześcianu z okręgiem
-     // Sprawdzenie odległości między środkiem okręgu a punktami sześcianu
     for (int i = 0; i < 8; i++) {
         glm::vec3 cubePoint = bulletPosition;
         cubePoint.x += (i & 1) ? cubeSize : -cubeSize;
@@ -33,11 +31,10 @@ bool Target::checkCollision(glm::vec3 bulletPosition, float cubeSize, float* poi
             changeTarget();
             *points += 10.0f / radius;
             std::cout << "Cel trafiony. Ilosc punktow: " << *points << std::endl;
-            return true; // Kolizja znaleziona
+            return true;
         }
     }
 
-    // Sprawdzenie kolizji środka okręgu z sześcianem
     float minX = bulletPosition.x - cubeSize;
     float maxX = bulletPosition.x + cubeSize;
     float minY = bulletPosition.y - cubeSize;
@@ -50,7 +47,7 @@ bool Target::checkCollision(glm::vec3 bulletPosition, float cubeSize, float* poi
     float closestZ = glm::clamp(targetPosition.z, minZ, maxZ);
 
     float distanceSquared = glm::distance(glm::vec3(closestX, closestY, closestZ), targetPosition);
-    return distanceSquared < radius * radius / 2; // Zwrócenie wyniku kolizji
+    return distanceSquared < radius * radius / 2;
 }
 
 float Target::randomFloat(float x, float y)
