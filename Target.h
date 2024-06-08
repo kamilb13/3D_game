@@ -18,8 +18,6 @@ public:
     void drawFilledCircle(float angle);
     bool checkCollision(glm::vec3 bulletPosition, float cubeSize, float* points);
     float randomFloat(float x, float y);
-
-    
     void changeTarget();
 
 };

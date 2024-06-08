@@ -13,39 +13,38 @@ void Bullet::drawBullet()
 
     float halfSize = size / 2.0f;
 
-    //// Front face
     glBegin(GL_QUADS);
-    glColor3f(1.0f, 0.0f, 0.0f); // Red
+    glColor3f(1.0f, 0.0f, 0.0f);
     glVertex3f(center.x - halfSize, center.y - halfSize, center.z + halfSize);
     glVertex3f(center.x + halfSize, center.y - halfSize, center.z + halfSize);
     glVertex3f(center.x + halfSize, center.y + halfSize, center.z + halfSize);
     glVertex3f(center.x - halfSize, center.y + halfSize, center.z + halfSize);
-    // Back face
-    glColor3f(0.0f, 1.0f, 0.0f); // Green
+
+    glColor3f(0.0f, 1.0f, 0.0f);
     glVertex3f(center.x - halfSize, center.y - halfSize, center.z - halfSize);
     glVertex3f(center.x - halfSize, center.y + halfSize, center.z - halfSize);
     glVertex3f(center.x + halfSize, center.y + halfSize, center.z - halfSize);
     glVertex3f(center.x + halfSize, center.y - halfSize, center.z - halfSize);
-    // Top face
-    glColor3f(0.0f, 0.0f, 1.0f); // Blue
+
+    glColor3f(0.0f, 0.0f, 1.0f);
     glVertex3f(center.x - halfSize, center.y + halfSize, center.z - halfSize);
     glVertex3f(center.x - halfSize, center.y + halfSize, center.z + halfSize);
     glVertex3f(center.x + halfSize, center.y + halfSize, center.z + halfSize);
     glVertex3f(center.x + halfSize, center.y + halfSize, center.z - halfSize);
-    // Bottom face
-    glColor3f(1.0f, 1.0f, 0.0f); // Yellow
+
+    glColor3f(1.0f, 1.0f, 0.0f);
     glVertex3f(center.x - halfSize, center.y - halfSize, center.z - halfSize);
     glVertex3f(center.x + halfSize, center.y - halfSize, center.z - halfSize);
     glVertex3f(center.x + halfSize, center.y - halfSize, center.z + halfSize);
     glVertex3f(center.x - halfSize, center.y - halfSize, center.z + halfSize);
-    //// Right face
-    glColor3f(1.0f, 0.0f, 1.0f); // Magenta
+
+    glColor3f(1.0f, 0.0f, 1.0f);
     glVertex3f(center.x + halfSize, center.y - halfSize, center.z - halfSize);
     glVertex3f(center.x + halfSize, center.y + halfSize, center.z - halfSize);
     glVertex3f(center.x + halfSize, center.y + halfSize, center.z + halfSize);
     glVertex3f(center.x + halfSize, center.y - halfSize, center.z + halfSize);
-    // Left face
-    glColor3f(0.0f, 1.0f, 1.0f); // Cyan
+
+    glColor3f(0.0f, 1.0f, 1.0f); 
     glVertex3f(center.x - halfSize, center.y - halfSize, center.z - halfSize);
     glVertex3f(center.x - halfSize, center.y - halfSize, center.z + halfSize);
     glVertex3f(center.x - halfSize, center.y + halfSize, center.z + halfSize);

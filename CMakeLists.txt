@@ -29,35 +29,21 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(glm)
 
-FetchContent_Declare(
-        SOIL
-        GIT_REPOSITORY https://github.com/littlstar/soil.git
-        GIT_TAG master
-)
-
-FetchContent_MakeAvailable(SOIL)
-
-FetchContent_Declare(
-        assimp
-        GIT_REPOSITORY https://github.com/assimp/assimp.git
-        GIT_TAG master
-)
-
-FetchContent_MakeAvailable(assimp)
-
 add_executable(${PROJECT_NAME}
         main.cpp
         Crosshair.cpp
         Crosshair.h
-        Camera.cpp
-        Camera.h
         Bullet.cpp
         Bullet.h
         EventHandler.cpp
         EventHandler.h
-        Cube.cpp
-        Cube.h
+        Target.h
+        Target.cpp
+        Map.cpp
+        Map.h
+        GLEWInitializer.h
+        GLEWInitializer.cpp
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE glfw GLEW glm SOIL GL)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw GLEW glm GL)
 

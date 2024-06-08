@@ -4,20 +4,18 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <vector>
 #include <cmath>
 
 #include "GLEWInitializer.h"
 #include "Crosshair.h"
-#include "Camera.h"
 #include "Bullet.h"
 #include "EventHandler.h"
-#include "Cube.h"
 #include "Map.h"
 #include "Target.h"
 
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
+#define SCALE 2
 #define M_PI 3.14159265358979323846
 
 // do tego zeby jak patrze do przodu to zebym szedl do przodu a nie na sztywno
@@ -38,11 +36,7 @@ float lastFrame = 0.0f;
 
 float points = 0;
 
-float verticalVelocity = 2.0f;
-float jumpForce = 2.0f;
-
-float gravity = -0.2f;
-float posY = 1.0f; // Początkowa pozycja Y postaci
+float posY = 1.0f;
 int currentBullet = 0;
 
 
@@ -57,7 +51,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
-
 Bullet magazine[30];
 
 Target targetsTab[5];
@@ -68,8 +61,6 @@ glm::vec3 targets[] = {
     glm::vec3(2.1f, 8, 40),
     glm::vec3(2.1f, 5, 23),
 };
-
-bool targetHit;
 
 void initTargets() {
     for (int i = 0; i < 5; i++) {
@@ -85,7 +76,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
             magazine[currentBullet++].shoot(cameraPos, cameraFront);
         }
         else {
-            std::cout << "EMPTY MAGAZINE! Click 'R' to reload!" << std::endl;
+            std::cout << "Pusty magazynek!" << std::endl;
         }
     }
 }
@@ -117,12 +108,8 @@ void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
         rotationX = -89.0f;
 }
 
-float maxX = 50.0f;
-float maxZ = 50.0f;
-
-
 int main() {
-    GLFWwindow* window = GLEWInitializer::initGLEW(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Window");
+    GLFWwindow* window = GLEWInitializer::initGLEW(SCREEN_WIDTH, SCREEN_HEIGHT, "FPS 3D");
     if (!window) {
         std::cerr << "Failed to initialize GLEW and create GLFW window\n";
         return -1;
@@ -147,7 +134,7 @@ int main() {
     glLoadIdentity();
 
     Map map;
-    map.generateMapFromFile("D:/opengl/game3D/game3D/game3D/map.txt");
+    map.generateMapFromFile("../map.txt");
 
     initTargets();
 
@@ -175,13 +162,10 @@ int main() {
         // Ustawienie kamery
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
         glMultMatrixf(glm::value_ptr(view));
-        
-        //###########
-        //isInsideMapBounds(cameraPos, maxX, maxZ);
-        std::cout << "x " << cameraPos.x << std::endl;
-        std::cout << "y " <<  cameraPos.y << std::endl;
-        std::cout << "z " <<  cameraPos.z << std::endl;
-        //###########
+
+//        std::cout << "x " << cameraPos.x << std::endl;
+//        std::cout << "y " <<  cameraPos.y << std::endl;
+//        std::cout << "z " <<  cameraPos.z << std::endl;
 
         for (int i = 0; i < 5; i++) {
             targetsTab[i].drawFilledCircle(90.0f);
@@ -204,7 +188,7 @@ int main() {
         // Przesunięcie postaci na nową pozycję
         glTranslatef(0.0f, posY, 0.0f);
 
-        map.drawMap(2)  ;
+        map.drawMap(SCALE);
         Crosshair::drawCrosshair(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         glPopMatrix();

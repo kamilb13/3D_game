@@ -12,7 +12,8 @@ void Crosshair::drawCrosshair(float screen_width, float screen_height) {
     glLoadIdentity();
 
     glBegin(GL_LINES);
-    glColor3f(1.0f, 1.0f, 1.0f); // Biały kolor
+    glColor3f(1.0f, 1.0f, 1.0f);
+
     // Linie poziome
     glVertex2f(screen_width / 2 - 10, screen_height / 2);
     glVertex2f(screen_width / 2 + 10, screen_height / 2);
